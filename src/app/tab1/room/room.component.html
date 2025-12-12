@@ -1,0 +1,7 @@
+<div class="page">
+  <div class="devices">
+    @for(device of devices; track device.id) {
+    <app-device [device]="device"></app-device>
+    }
+  </div>
+</div>

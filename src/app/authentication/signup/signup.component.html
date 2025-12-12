@@ -1,0 +1,35 @@
+<form (ngSubmit)="signup($event)" [formGroup]="formGrp">
+  <div class="page">
+    <div class="form">
+      <div class="input-form">
+        <input type="email" placeholder="Email" formControlName="email" />
+      </div>
+      <div>
+        <div class="input-form">
+          <input
+            [type]="passToShow ? 'text' : 'password'"
+            placeholder="Password"
+            formControlName="password"
+          />
+          <span class="eye" (click)="passToShow = !passToShow">
+            <img
+              [src]="passToShow ? 'assets/eye-hide.svg' : 'assets/eye-show.svg'"
+              width="20px"
+              height="20px"
+              alt=""
+            />
+          </span>
+        </div>
+        <div class="msg">
+          <small (click)="goToSignIn()">Already have an account?</small>
+        </div>
+      </div>
+      <div class="forgot-pass msg" (click)="forgotPassword()">
+        <small>Forgot password?</small>
+      </div>
+      <div class="login-btn">
+        <button class="login" (click)="signup($event)">Sign Up</button>
+      </div>
+    </div>
+  </div>
+</form>
