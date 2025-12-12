@@ -1,17 +1,26 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 1
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 1</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <app-explore-container name="Tab 1 page"></app-explore-container>
-</ion-content>
+<app-tab style="height: 100%">
+  <ng-container header>
+    <div class="add-device">
+      <button>
+        <img src="assets/plus-sign.svg" width="20px" height="20px" />
+      </button>
+    </div>
+  </ng-container>
+  <ng-container content>
+    <div class="content">
+      <div class="tabs">
+        @for(tab of tabs; track tab.id) {
+        <p [class]="tab.active ? 'tab-active': ''" (click)="changeTab(tab)">
+          {{tab.label}}
+        </p>
+        }
+      </div>
+      <div class="tab-content">
+        <app-room [tab]="selectedTab"></app-room>
+      </div>
+    </div>
+  </ng-container>
+  <ng-container footer>
+    <!-- <h1>Tab 1</h1> -->
+  </ng-container>
+</app-tab>
