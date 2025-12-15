@@ -1,8 +1,14 @@
+import { User } from './user';
+
 export interface IDevice {
   id: number;
   name: string;
   status: boolean;
-  amps?: number;
+  power?: number;
+  current?: number;
+  type: string;
+  room: string;
+  users?: User[];
   alarm?: any;
   timer?: any;
 }

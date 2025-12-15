@@ -45,6 +45,7 @@ export class SignupComponent implements OnInit {
         })
         .then((response) => {
           if (response) {
+            localStorage.setItem('userID', this.formGrp.get('email')?.value!);
             this._router.navigateByUrl('/tabs');
           } else {
             alert('Unable to sign up user');

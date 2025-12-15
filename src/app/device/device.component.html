@@ -5,7 +5,11 @@
     </div>
     <div class="status-action">
       <label class="switch">
-        <input type="checkbox" checked />
+        <input
+          type="checkbox"
+          [checked]="device.status"
+          [formControl]="statusControl"
+        />
         <span class="slider round"></span>
       </label>
     </div>

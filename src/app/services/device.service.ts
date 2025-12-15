@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { collectionData, Firestore } from '@angular/fire/firestore';
-import { BehaviorSubject, from, map, Observable } from 'rxjs';
 import {
+  collectionData,
+  Firestore,
   addDoc,
   collection,
   doc,
@@ -12,8 +12,21 @@ import {
   setDoc,
   Unsubscribe,
   updateDoc,
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
+import { BehaviorSubject, from, map, Observable } from 'rxjs';
+// import {
+//   addDoc,
+//   collection,
+//   doc,
+//   getDocs,
+//   onSnapshot,
+//   query,
+//   setDoc,
+//   Unsubscribe,
+//   updateDoc,
+// } from 'firebase/firestore';
 import { Devices, IDevice } from '../models/device';
+import { User } from '../models/user';
 
 @Injectable({
   providedIn: 'root',
@@ -23,24 +36,43 @@ export class DeviceService {
 
   constructor(private readonly _firestore: Firestore) {}
 
-  initDevices(): void {
+  initDevices(user: User): void {
     const devices: Devices = [
       {
-        ID: 1,
+        id: 1,
         name: 'Water heater M',
-        amps: 1,
         status: false,
+        type: 'switch',
+        room: 'Livingroom',
       },
       {
-        ID: 2,
+        id: 2,
         name: 'Water heater E',
-        amps: 1,
         status: true,
+        type: 'switch',
+        room: 'Livingroom',
+      },
+      {
+        id: 3,
+        name: 'Washer',
+        status: true,
+        type: 'switch',
+        room: 'Bedroom',
       },
     ];
     devices.forEach((device) => {
-      setDoc(doc(this._firestore, `devices/${device.ID}`), device);
-      // from(addDoc(collection(this._firestore, `devices/${device.id}`), device));
+      setDoc(doc(this._firestore, `users/${user.email}`), {});
+      setDoc(
+        doc(this._firestore, `users/${user.email}/rooms/${device.room}`),
+        {}
+      );
+      setDoc(
+        doc(
+          this._firestore,
+          `users/${user.email}/rooms/${device.room}/devices/${device.id}`
+        ),
+        device
+      );
     });
   }
 
@@ -56,8 +88,11 @@ export class DeviceService {
     });
   }
 
-  update(device: IDevice): void {
-    const userRef = doc(this._firestore, `devices/${device.ID}`);
+  update(user: User, device: IDevice): void {
+    const userRef = doc(
+      this._firestore,
+      `users/${user.email}/rooms/${device.room}/devices/${device.id}`
+    );
 
     updateDoc(userRef, { ...device });
   }
