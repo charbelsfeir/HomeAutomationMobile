@@ -7,5 +7,5 @@ export interface User {
   isNotificationActive?: boolean;
   deleted?: boolean;
   rooms?: Rooms;
-  // devices?: Devices;
+  devices?: Devices;
 }

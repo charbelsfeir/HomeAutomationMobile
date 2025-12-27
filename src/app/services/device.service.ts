@@ -13,7 +13,7 @@ import {
   Unsubscribe,
   updateDoc,
 } from '@angular/fire/firestore';
-import { BehaviorSubject, from, map, Observable } from 'rxjs';
+import { BehaviorSubject, from, map, Observable, tap } from 'rxjs';
 // import {
 //   addDoc,
 //   collection,
@@ -36,44 +36,53 @@ export class DeviceService {
 
   constructor(private readonly _firestore: Firestore) {}
 
-  initDevices(user: User): void {
-    const devices: Devices = [
-      {
-        id: 1,
-        name: 'Water heater M',
-        status: false,
-        type: 'switch',
-        room: 'Livingroom',
-      },
-      {
-        id: 2,
-        name: 'Water heater E',
-        status: true,
-        type: 'switch',
-        room: 'Livingroom',
-      },
-      {
-        id: 3,
-        name: 'Washer',
-        status: true,
-        type: 'switch',
-        room: 'Bedroom',
-      },
-    ];
-    devices.forEach((device) => {
-      setDoc(doc(this._firestore, `users/${user.email}`), {});
-      setDoc(
-        doc(this._firestore, `users/${user.email}/rooms/${device.room}`),
-        {}
-      );
-      setDoc(
-        doc(
-          this._firestore,
-          `users/${user.email}/rooms/${device.room}/devices/${device.id}`
-        ),
-        device
-      );
-    });
+  // initDevices(user: User): void {
+  //   const devices: Devices = [
+  //     {
+  //       id: 1,
+  //       name: 'Water heater M',
+  //       status: false,
+  //       type: 'switch',
+  //       room: 'Livingroom',
+  //     },
+  //     {
+  //       id: 2,
+  //       name: 'Water heater E',
+  //       status: true,
+  //       type: 'switch',
+  //       room: 'Livingroom',
+  //     },
+  //     {
+  //       id: 3,
+  //       name: 'Washer',
+  //       status: true,
+  //       type: 'switch',
+  //       room: 'Bedroom',
+  //     },
+  //   ];
+  //   devices.forEach((device) => {
+  //     setDoc(doc(this._firestore, `users/${user.email}`), {});
+  //     setDoc(
+  //       doc(this._firestore, `users/${user.email}/rooms/${device.room}`),
+  //       {}
+  //     );
+  //     setDoc(
+  //       doc(
+  //         this._firestore,
+  //         `users/${user.email}/rooms/${device.room}/devices/${device.id}`
+  //       ),
+  //       device
+  //     );
+  //   });
+  // }
+
+  addDevice(user: User, device: IDevice): void {
+    setDoc(doc(this._firestore, `users/${user.email}`), {});
+    setDoc(doc(this._firestore, `users/${user.email}`), {});
+    setDoc(
+      doc(this._firestore, `users/${user.email}/devices/${device.id}`),
+      device
+    );
   }
 
   getDevices(): Unsubscribe {
@@ -95,5 +104,34 @@ export class DeviceService {
     );
 
     updateDoc(userRef, { ...device });
+  }
+
+  changeStatus(user: User, device: IDevice): void {
+    const userRef = doc(
+      this._firestore,
+      `users/${user.email}/devices/${device.id}`
+    );
+
+    updateDoc(userRef, { ...device });
+  }
+
+  getByRoom(user: User, room?: string): Observable<Devices> {
+    const devicesRef = collection(
+      this._firestore,
+      `users/${user.email}/devices`
+    );
+    return (
+      collectionData(devicesRef, { idField: 'id' }) as Observable<Devices>
+    ).pipe(
+      map((devices: Devices) =>
+        devices.filter((device) => {
+          if (room) {
+            return device.room == room;
+          }
+
+          return device;
+        })
+      )
+    );
   }
 }

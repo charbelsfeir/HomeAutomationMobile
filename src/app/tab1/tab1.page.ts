@@ -8,7 +8,12 @@ import {
 } from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import { TabComponent } from '../tab/tab.component';
-import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterModule,
+  RouterOutlet,
+} from '@angular/router';
 import { RoomComponent } from './room/room.component';
 import { DeviceService } from '../services/device.service';
 import { RoomService } from '../services/room.service';
@@ -32,9 +37,11 @@ import { CommonModule } from '@angular/common';
     RouterOutlet,
     RoomComponent,
     CommonModule,
+    RouterModule,
   ],
 })
 export class Tab1Page implements OnInit {
+  displayDropdown = false;
   tabs: {
     id: number;
     label: string;
@@ -45,14 +52,8 @@ export class Tab1Page implements OnInit {
       id: 0,
       label: 'All',
       active: true,
-      name: 'all',
+      name: 'All',
     },
-    // {
-    //   id: 1,
-    //   label: 'Livingroom',
-    //   active: false,
-    //   name: 'livingroom',
-    // },
   ];
 
   rooms$?: Observable<Rooms>;
@@ -95,9 +96,6 @@ export class Tab1Page implements OnInit {
           })
         )
         .subscribe();
-      // this._deviceService.initDevices({
-      //   email: localStorage.getItem('userID')!,
-      // });
     }
   }
 
@@ -105,15 +103,13 @@ export class Tab1Page implements OnInit {
     if (this.selectedTab.id === 0) {
       return {
         id: 'All',
-        devices: (this.rooms as IRoom[]).flatMap((room: IRoom) => room.devices),
+        name: 'All',
       };
     }
 
     return {
       id: this.selectedTab.name,
-      devices:
-        this.rooms.filter((room) => room.id === this.selectedTab.name)[0]
-          .devices ?? [],
+      name: this.selectedTab.name,
     };
   }
 
@@ -134,6 +130,14 @@ export class Tab1Page implements OnInit {
         ...tab,
         active: false,
       };
+    });
+  }
+
+  addDevice(): void {
+    this._router.navigate(['/add-device'], {
+      queryParams: {
+        room: this.selectedTab.name,
+      },
     });
   }
 }

@@ -44,100 +44,72 @@ export class RoomService {
   getRooms(user: User): Observable<Rooms> {
     const roomsRef = collection(this._firestore, `users/${user.email}/rooms`);
 
-    return (
-      collectionData(roomsRef, { idField: 'id' }) as Observable<Rooms>
-    ).pipe(
-      switchMap((rooms: Rooms) => {
-        if (!rooms.length) return of([]); // no rooms
-
-        const roomsWithDevices$ = rooms.map((room) => {
-          const devicesRef = collection(
-            this._firestore,
-            `users/${user.email}/rooms/${room.id}/devices`
-          );
-
-          return (
-            collectionData(devicesRef, { idField: 'id' }) as Observable<Devices>
-          ).pipe(map((devices) => ({ ...room, devices })));
-        });
-
-        return combineLatest(roomsWithDevices$);
-      })
-    );
+    return collectionData(roomsRef, { idField: 'id' }) as Observable<Rooms>;
   }
 
-  getRoom(user: User, roomId?: string): Observable<IRoom> {
-    if (roomId) {
-      const roomsRef = collection(
-        this._firestore,
-        `users/${user.email}/rooms/${roomId}/devices`
-      );
+  // getRoom(user: User, roomId?: string): Observable<IRoom> {
+  //   if (roomId) {
+  //     const roomsRef = collection(
+  //       this._firestore,
+  //       `users/${user.email}/rooms/${roomId}`
+  //     );
 
-      return (
-        collectionData(roomsRef, { idField: 'id' }) as Observable<Devices>
-      ).pipe(
-        map((devices) => {
-          return {
-            id: roomId,
-            devices,
-          };
-        })
-        // switchMap((rooms: Devices) => {
-        //   if (!rooms.length) return of([]); // no rooms
+  //     return collectionData(roomsRef, { idField: 'id' }) as Observable<IRoom>;
+  //     // switchMap((rooms: Devices) => {
+  //     //   if (!rooms.length) return of([]); // no rooms
 
-        //   const roomsWithDevices$ = rooms.map((room) => {
-        //     const devicesRef = collection(
-        //       this._firestore,
-        //       `users/${user.email}/rooms/${room.id}/devices`
-        //     );
+  //     //   const roomsWithDevices$ = rooms.map((room) => {
+  //     //     const devicesRef = collection(
+  //     //       this._firestore,
+  //     //       `users/${user.email}/rooms/${room.id}/devices`
+  //     //     );
 
-        //     return (
-        //       collectionData(devicesRef, { idField: 'id' }) as Observable<Devices>
-        //     ).pipe(map((devices) => ({ ...room, devices })));
-        //   });
+  //     //     return (
+  //     //       collectionData(devicesRef, { idField: 'id' }) as Observable<Devices>
+  //     //     ).pipe(map((devices) => ({ ...room, devices })));
+  //     //   });
 
-        //   return combineLatest(roomsWithDevices$);
-        // })
-      );
-    }
-    const roomsRef = collection(this._firestore, `users/${user.email}/rooms`);
+  //     //   return combineLatest(roomsWithDevices$);
+  //     // })
+  //   }
+  //   // const roomsRef = collection(this._firestore, `users/${user.email}/rooms`);
 
-    return (
-      collectionData(roomsRef, { idField: 'id' }) as Observable<Devices>
-    ).pipe(
-      switchMap((rooms: Devices) => {
-        if (!rooms.length) return of([]); // no rooms
+  //   // return (
+  //   //   collectionData(roomsRef, { idField: 'id' }) as Observable<Devices>
+  //   // ).pipe(
+  //   //   switchMap((rooms: Devices) => {
+  //   //     if (!rooms.length) return of([]); // no rooms
 
-        const roomsWithDevices$ = rooms.map((room) => {
-          const devicesRef = collection(
-            this._firestore,
-            `users/${user.email}/rooms/${room.id}/devices`
-          );
+  //   //     const roomsWithDevices$ = rooms.map((room) => {
+  //   //       const devicesRef = collection(
+  //   //         this._firestore,
+  //   //         `users/${user.email}/rooms/${room.id}/devices`
+  //   //       );
 
-          return collectionData(devicesRef, {
-            idField: 'id',
-          }) as Observable<Devices>;
-        });
+  //   //       return collectionData(devicesRef, {
+  //   //         idField: 'id',
+  //   //       }) as Observable<Devices>;
+  //   //     });
 
-        return combineLatest(roomsWithDevices$).pipe(
-          map((devices) => devices.flat())
-        );
-      }),
-      map((devices) => {
-        return {
-          id: 'All',
-          devices,
-        };
-      })
-    );
-  }
+  //   //     return combineLatest(roomsWithDevices$).pipe(
+  //   //       map((devices) => devices.flat())
+  //   //     );
+  //   //   }),
+  //   //   map((devices) => {
+  //   //     return {
+  //   //       id: 'All',
+  //   //       devices,
+  //   //     };
+  //   //   })
+  //   // );
+  // }
 
-  update(user: User, device: IDevice): void {
+  update(user: User, room: IRoom): void {
     const userRef = doc(
       this._firestore,
-      `users/${user.email}/rooms/${device.room}/devices/${device.id}`
+      `users/${user.email}/rooms/${room.id}`
     );
 
-    updateDoc(userRef, { ...device });
+    updateDoc(userRef, { ...room });
   }
 }

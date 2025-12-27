@@ -1,19 +1,29 @@
 <app-tab style="height: 100%">
   <ng-container header>
     <div class="add-device">
-      <button>
+      <button (click)="addDevice()">
         <img src="assets/plus-sign.svg" width="20px" height="20px" />
       </button>
     </div>
   </ng-container>
   <ng-container content>
     <div class="content">
-      <div class="tabs">
-        @for(tab of tabs; track tab.id) {
-        <p [class]="tab.active ? 'tab-active': ''" (click)="changeTab(tab)">
-          {{tab.label}}
-        </p>
-        }
+      <div class="tabs-zone">
+        <div class="tabs">
+          @for(tab of tabs; track tab.id) {
+          <p [class]="tab.active ? 'tab-active': ''" (click)="changeTab(tab)">
+            {{tab.label}}
+          </p>
+          }
+        </div>
+        <div class="more dropdown" (click)="displayDropdown = !displayDropdown">
+          <img src="assets/more.svg" width="20px" height="20px" />
+          <div
+            [class]="'dropdown-content ' + (displayDropdown ? 'show' : 'hide') "
+          >
+            <a [routerLink]="['/manage-rooms']"><small>Manage rooms</small></a>
+          </div>
+        </div>
       </div>
       <div class="tab-content">
         <app-room [room]="filterRooms()" [tab]="selectedTab"></app-room>

@@ -30,8 +30,7 @@ export class DeviceComponent implements OnInit, OnDestroy, OnChanges {
       .pipe(
         takeUntil(this.destroyRef$),
         tap((status) => {
-          console.log(status);
-          this._deviceService.update(
+          this._deviceService.changeStatus(
             {
               id: '',
               email: localStorage.getItem('userID')!,
@@ -49,7 +48,7 @@ export class DeviceComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.['device']?.currentValue) {
       this.device = changes?.['device']?.currentValue;
-      this.statusControl.setValue(this.device.status);
+      this.statusControl.setValue(this.device.status, { emitEvent: false });
     }
   }
 

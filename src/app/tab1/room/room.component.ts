@@ -12,6 +12,7 @@ import { IRoom } from 'src/app/models/room';
 import { RoomService } from 'src/app/services/room.service';
 import { Observable, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-room',
@@ -30,23 +31,41 @@ export class RoomComponent implements OnInit, OnChanges {
 
   @Input() room?: IRoom;
 
-  room$ = new Observable<IRoom>();
+  devices$ = new Observable<Devices>();
 
-  constructor(private readonly _roomService: RoomService) {}
+  constructor(
+    private readonly _deviceService: DeviceService,
+    private readonly _router: Router
+  ) {}
 
   ngOnInit() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes?.['tab']?.currentValue) {
       if (localStorage.getItem('userID')) {
-        this.room$ = this._roomService.getRoom(
+        this.devices$ = this._deviceService.getByRoom(
           {
             id: '',
             email: localStorage.getItem('userID')!,
           },
-          this.tab?.name === 'all' ? undefined : this.tab?.name
+          this.tab?.name === 'All' ? undefined : this.tab?.name
         );
+        // this.room$ = this._roomService.getRoom(
+        //   {
+        //     id: '',
+        //     email: localStorage.getItem('userID')!,
+        //   },
+        //   this.tab?.name === 'all' ? undefined : this.tab?.name
+        // );
       }
     }
+  }
+
+  addDevice(): void {
+    this._router.navigate(['/add-device'], {
+      queryParams: {
+        room: this.room?.id,
+      },
+    });
   }
 }

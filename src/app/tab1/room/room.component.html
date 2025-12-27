@@ -1,7 +1,13 @@
 <div class="page">
+  @if(devices$ | async; as devices) { @if(devices.length > 0) {
   <div class="devices">
-    @for(device of (room$ | async)?.devices; track device.id) {
+    @for(device of devices; track device.id) {
     <app-device [device]="device"></app-device>
     }
   </div>
+  } @else {
+  <div class="no-devices">
+    <button class="addBtn" (click)="addDevice()">Add a device</button>
+  </div>
+  } }
 </div>

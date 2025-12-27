@@ -1,0 +1,56 @@
+<app-tab>
+  <ng-container header
+    ><div class="header"><p>Add device</p></div></ng-container
+  >
+  <ng-container content>
+    <form [formGroup]="formGrp">
+      <p class="title">Enter your WiFi SSID and Password</p>
+      <div class="form">
+        <div class="input-form">
+          <input type="text" placeholder="SSID" formControlName="ssid" />
+        </div>
+        <div>
+          <div class="input-form">
+            <input
+              [type]="passToShow ? 'text' : 'password'"
+              placeholder="Password"
+              formControlName="password"
+            />
+            <span class="eye" (click)="passToShow = !passToShow">
+              <img
+                [src]="passToShow ? 'assets/eye-hide.svg' : 'assets/eye-show.svg'"
+                width="20px"
+                height="20px"
+                alt=""
+              />
+            </span>
+          </div>
+        </div>
+        @if(connectBtnDisabled) {
+        <small class="error">Turn one device in pairing mode</small>
+        }
+        <div class="connect-btn">
+          <button
+            class="connect"
+            (click)="connect($event)"
+            [disabled]="connectBtnDisabled"
+          >
+            Connect
+          </button>
+        </div>
+      </div>
+    </form>
+    <!-- @if(devices.length === 0) {
+    <p>No devices found!</p>
+    } @else {
+
+    <li class="devices">
+      @for (device of devices; track device.uuids) {
+      <div class="device">
+        <p>{{device.name? device.name : device.deviceId}}</p>
+      </div>
+      }
+    </li>
+    } -->
+  </ng-container>
+</app-tab>

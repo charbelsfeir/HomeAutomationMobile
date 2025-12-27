@@ -60,13 +60,14 @@
   }
 
   .card {
-    background-color: whitesmoke;
+    background-color: rgb(255, 255, 255);
     width: 100px;
     height: 100px;
     padding: 5px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    border-radius: 10px;
     > .top {
       display: flex;
       justify-content: space-between;

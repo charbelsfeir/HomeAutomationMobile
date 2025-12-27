@@ -2,7 +2,7 @@ import { Devices } from './device';
 
 export interface IRoom {
   id: string;
-  devices: Devices;
+  name: string;
 }
 
 export type Rooms = IRoom[];

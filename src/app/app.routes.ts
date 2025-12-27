@@ -24,4 +24,12 @@ export const routes: Routes = [
     path: 'loading',
     component: LoadingPageComponent,
   },
+  {
+    path: 'manage-rooms',
+    loadComponent: () => import('./manage-rooms/manage-rooms.page').then( m => m.ManageRoomsPage)
+  },
+  {
+    path: 'add-device',
+    loadComponent: () => import('./add-device/add-device.page').then( m => m.AddDevicePage)
+  },
 ];

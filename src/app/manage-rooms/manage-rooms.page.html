@@ -1,0 +1,34 @@
+<app-tab>
+  <ng-container header
+    ><div class="header">
+      <div class="back-btn" [routerLink]="['/']">
+        <img src="assets/back.svg" alt="" width="30px" height="20px" />
+      </div>
+      <div class="title">
+        <p>Manage rooms</p>
+      </div>
+      <div></div></div
+  ></ng-container>
+  <ng-container content>
+    <div class="rooms">
+      @for(room of room$ | async; track room.id) {
+      <div class="room">
+        <p>{{room.id}}</p>
+      </div>
+      }
+    </div>
+  </ng-container>
+  <ng-container footer>
+    <div class="add-btn">
+      <button (click)="openAddModal()">
+        Add
+        <span
+          ><img src="assets/plus-sign.svg" alt="" width="15px" height="15px"
+        /></span>
+      </button>
+    </div>
+  </ng-container>
+  @if(showAddRoomModal) {
+  <app-add-room></app-add-room>
+  }
+</app-tab>

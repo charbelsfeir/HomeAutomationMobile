@@ -1,11 +1,13 @@
 <div class="page">
-  <div class="header">
-    <ng-content select="[header]"></ng-content>
-  </div>
   <div class="content">
-    <ng-content select="[content]"></ng-content>
-  </div>
-  <div class="footer">
-    <ng-content select="[footer]"></ng-content>
+    <div class="header">
+      <ng-content select="[header]"></ng-content>
+    </div>
+    <div class="content">
+      <ng-content select="[content]"></ng-content>
+    </div>
+    <div class="footer">
+      <ng-content select="[footer]"></ng-content>
+    </div>
   </div>
 </div>
