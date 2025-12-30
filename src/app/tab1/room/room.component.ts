@@ -46,14 +46,14 @@ export class RoomComponent implements OnInit, OnChanges {
         this.devices$ = this._deviceService.getByRoom(
           {
             id: '',
-            email: localStorage.getItem('userID')!,
+            email: localStorage.getItem('userID')!.toLocaleLowerCase(),
           },
           this.tab?.name === 'All' ? undefined : this.tab?.name
         );
         // this.room$ = this._roomService.getRoom(
         //   {
         //     id: '',
-        //     email: localStorage.getItem('userID')!,
+        //     email: localStorage.getItem('userID')!.toLocaleLowerCase(),
         //   },
         //   this.tab?.name === 'all' ? undefined : this.tab?.name
         // );

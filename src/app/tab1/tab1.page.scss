@@ -18,22 +18,31 @@
   .content {
     display: flex;
     flex-direction: column;
-    background-color: rgb(253, 245, 229);
     height: 100%;
     padding: 20px 15px 20px 15px;
+    border-radius: 50px 50px 0 0;
     > .tabs-zone {
+      position: relative;
       > .tabs {
         display: flex;
         column-gap: 10px;
         overflow-x: scroll;
-        > p {
-          margin: 0;
-          color: grey;
-          font-size: medium;
-        }
-
-        > .tab-active {
-          color: rgb(37, 37, 37);
+        > .tab {
+          display: flex;
+          flex-direction: column;
+          > hr.tab-active {
+            background-color: black;
+            width: 100%;
+          }
+          > p {
+            margin: 0;
+            color: #eaebca;
+            font-size: medium;
+          }
+          > p.tab-active {
+            color: rgb(37, 37, 37);
+            border: 0;
+          }
         }
 
         > .more {
@@ -45,6 +54,20 @@
       padding: 20px 5px 20px 5px;
     }
   }
+
+  // .indicator {
+  //   position: absolute;
+  //   bottom: 0;
+  //   height: 2px;
+  //   background-color: black;
+  //   width: 5px; /* Must match the tab min-width */
+
+  //   /* The Animation Logic */
+  //   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  //   /* Calculate movement: (width + gap) * index */
+  //   transform: translateX(calc((5px + 10px) * var(--active-index, 0)));
+  // }
 
   .tabs-zone {
     display: flex;

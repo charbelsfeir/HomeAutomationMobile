@@ -38,6 +38,27 @@
             Connect
           </button>
         </div>
+        @if (searching) {
+        <div class="radar">
+          <div><p></p></div>
+          <div class="radar-container">
+            <div class="ring"></div>
+            <div class="ring"></div>
+            <!-- <div class="ring"></div> -->
+
+            <div class="scanner"></div>
+
+            <div class="center-dot"></div>
+          </div>
+        </div>
+        } @else { @if(connecting) {
+        <div class="connection-status">
+          <div class="spinner"></div>
+          <div class="label">
+            <p>{{statusLabel}}</p>
+          </div>
+        </div>
+        } }
       </div>
     </form>
     <!-- @if(devices.length === 0) {

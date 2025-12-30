@@ -33,7 +33,7 @@ export class DeviceComponent implements OnInit, OnDestroy, OnChanges {
           this._deviceService.changeStatus(
             {
               id: '',
-              email: localStorage.getItem('userID')!,
+              email: localStorage.getItem('userID')!.toLocaleLowerCase(),
             },
             {
               ...this.device,

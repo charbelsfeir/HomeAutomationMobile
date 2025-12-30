@@ -5,6 +5,7 @@ export interface IDevice {
   id: string;
   name: string;
   status: boolean;
+  userEmail: string;
   power?: number;
   current?: number;
   type?: string;

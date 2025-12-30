@@ -27,14 +27,20 @@ import { BehaviorSubject, from, map, Observable, tap } from 'rxjs';
 // } from 'firebase/firestore';
 import { Devices, IDevice } from '../models/device';
 import { User } from '../models/user';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment.prod';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DeviceService {
   $devices = new BehaviorSubject<Devices>([]);
+  private readonly _url = environment.backenUrl + '/device';
 
-  constructor(private readonly _firestore: Firestore) {}
+  constructor(
+    private readonly _firestore: Firestore,
+    private readonly _http: HttpClient
+  ) {}
 
   // initDevices(user: User): void {
   //   const devices: Devices = [
@@ -76,13 +82,14 @@ export class DeviceService {
   //   });
   // }
 
-  addDevice(user: User, device: IDevice): void {
-    setDoc(doc(this._firestore, `users/${user.email}`), {});
-    setDoc(doc(this._firestore, `users/${user.email}`), {});
-    setDoc(
-      doc(this._firestore, `users/${user.email}/devices/${device.id}`),
-      device
-    );
+  addDevice(device: IDevice): Observable<IDevice> {
+    return this._http.post<IDevice>(`${this._url}/register`, device);
+    // setDoc(doc(this._firestore, `users/${user.email}`), {});
+    // setDoc(doc(this._firestore, `users/${user.email}`), {});
+    // setDoc(
+    //   doc(this._firestore, `users/${user.email}/devices/${device.id}`),
+    //   device
+    // );
   }
 
   getDevices(): Unsubscribe {

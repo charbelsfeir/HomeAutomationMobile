@@ -7,7 +7,7 @@
   }
 
   .title {
-    color: black;
+    color: white;
   }
 
   form {
@@ -69,5 +69,111 @@
 
   .error {
     color: red;
+  }
+
+  .radar {
+    // padding-top: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    row-gap: 30px;
+  }
+
+  .radar-container {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 255, 65, 0.2);
+    background: radial-gradient(
+      circle,
+      rgba(0, 40, 0, 1) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+    overflow: hidden;
+  }
+
+  /* Creating the grid/rings */
+  .ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid rgba(0, 255, 65, 0.15);
+    border-radius: 50%;
+  }
+
+  .ring:nth-child(1) {
+    width: 50px;
+    height: 50px;
+  }
+  .ring:nth-child(2) {
+    width: 125px;
+    height: 125px;
+  }
+
+  /* The rotating sweep */
+  .scanner {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    top: 0;
+    left: 50%;
+    transform-origin: bottom left;
+    background: conic-gradient(from 0deg, #00ff41);
+    animation: rotate 3s linear infinite;
+    opacity: 0.4;
+  }
+
+  /* Center dot with pulse */
+  .center-dot {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background: #00ff41;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 15px #00ff41;
+  }
+
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .connection-status {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    > .label {
+      color: white;
+    }
+  }
+
+  .spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #3498db; /* Change this to your theme color */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
   }
 }

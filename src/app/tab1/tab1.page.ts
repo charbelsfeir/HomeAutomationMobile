@@ -79,7 +79,7 @@ export class Tab1Page implements OnInit {
       this._roomService
         .getRooms({
           id: '',
-          email: localStorage.getItem('userID')!,
+          email: localStorage.getItem('userID')!.toLocaleLowerCase(),
         })
         .pipe(
           take(1),

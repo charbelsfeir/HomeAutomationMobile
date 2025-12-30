@@ -2,6 +2,12 @@
   .page {
     height: 100%;
     width: 100%;
+    background: radial-gradient(
+      circle,
+      rgba(2, 0, 36, 1) 0%,
+      rgba(9, 9, 121, 1) 17%,
+      rgba(0, 212, 255, 1) 100%
+    );
     > .content {
       position: relative;
     }
@@ -11,14 +17,14 @@
     // height: 10%;
     top: 0px;
     width: 100%;
-    background-color: rgb(252, 247, 240) !important;
+    // background-color: rgb(252, 247, 240) !important;
     // right: 5%;
   }
 
   .content {
     // margin-top: 20%;
     height: 100%;
-    background-color: rgb(253, 245, 229);
+    // background-color: rgb(253, 245, 229);
     padding-top: 8%;
   }
 

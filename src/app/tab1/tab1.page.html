@@ -9,12 +9,16 @@
   <ng-container content>
     <div class="content">
       <div class="tabs-zone">
-        <div class="tabs">
+        <div class="tabs" [style.--active-index]="selectedTab.id">
           @for(tab of tabs; track tab.id) {
-          <p [class]="tab.active ? 'tab-active': ''" (click)="changeTab(tab)">
-            {{tab.label}}
-          </p>
+          <div class="tab">
+            <p [class]="tab.active ? 'tab-active': ''" (click)="changeTab(tab)">
+              {{tab.label}}
+            </p>
+            <!-- <hr [class]="tab.active ? 'tab-active': ''" /> -->
+          </div>
           }
+          <div class="indicator"></div>
         </div>
         <div class="more dropdown" (click)="displayDropdown = !displayDropdown">
           <img src="assets/more.svg" width="20px" height="20px" />

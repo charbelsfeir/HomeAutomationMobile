@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   FormControl,
@@ -26,6 +26,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { DeviceService } from '../services/device.service';
 import { IDevice } from '../models/device';
 import { CapacitorWifi } from '@capgo/capacitor-wifi';
+import { catchError, of, tap } from 'rxjs';
 
 @Component({
   selector: 'app-add-device',
@@ -49,6 +50,9 @@ export class AddDevicePage implements OnInit, OnDestroy {
     ssid: new FormControl('', [Validators.required]),
     password: new FormControl('', [Validators.required]),
   });
+  statusLabel = '';
+  searching = true;
+  connecting = false;
   passToShow = false;
   devices: BleDevice[] = [];
   scanning = false;
@@ -56,13 +60,14 @@ export class AddDevicePage implements OnInit, OnDestroy {
   roomName?: string;
 
   get connectBtnDisabled(): boolean {
-    return this.devices.length !== 1;
+    return this.devices.length !== 1 || !this.formGrp.valid || this.connecting;
   }
 
   constructor(
     private readonly _route: ActivatedRoute,
     private readonly _deviceService: DeviceService,
-    private readonly _router: Router
+    private readonly _router: Router,
+    private readonly _ref: ChangeDetectorRef
   ) {
     this.roomName = this._route.snapshot.queryParams['room'];
   }
@@ -91,7 +96,6 @@ export class AddDevicePage implements OnInit, OnDestroy {
 
         if (!this.devices.find((d) => d.deviceId === device.deviceId)) {
           if (device.name?.startsWith('SNF')) {
-            alert('Device found');
             this.devices.push(device);
             this.device = device;
           }
@@ -101,6 +105,9 @@ export class AddDevicePage implements OnInit, OnDestroy {
               'We detected more than 1 device powered on.\nPlease turn off one of them'
             );
             this.devices = [];
+          } else if (this.devices.length === 1) {
+            this.searching = false;
+            this._ref.detectChanges();
           }
         }
       }
@@ -128,6 +135,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
   async startScan() {
     if (this.scanning) return;
 
+    this.searching = true;
     this.devices = [];
     this.scanning = true;
 
@@ -146,16 +154,21 @@ export class AddDevicePage implements OnInit, OnDestroy {
 
   async connect(event: any) {
     event.preventDefault();
+    this.statusLabel = '';
     if (this.device && this.formGrp.valid) {
+      this.connecting = true;
+      this.statusLabel = 'Connecting';
       BleClient.connect(this.device.deviceId)
         .then((res) => {
+          // this.connecting = false;
+          this.statusLabel = 'Connected';
+          this._ref.detectChanges();
           BleClient.getServices(this.device!.deviceId)
             .then((services) => {
               services.forEach((service) => {
+                this.statusLabel = 'Transmitting data to the device';
+                this._ref.detectChanges();
                 service.characteristics.forEach((characteristic) => {
-                  // alert(
-                  //   `1 - service ${service.uuid} characteristics ${characteristic.uuid}`
-                  // );
                   if (characteristic.properties.write) {
                     BleClient.write(
                       this.device!.deviceId,
@@ -166,7 +179,10 @@ export class AddDevicePage implements OnInit, OnDestroy {
                           this.formGrp.get('password')!.value
                         }$${localStorage.getItem('userID')}!`
                       )
-                    ).catch((err) => alert(`Error writing ${err}`));
+                    ).catch((err) => {
+                      alert(`Error writing ${err}`);
+                      this._restartDeviceScan();
+                    });
                     BleClient.startNotifications(
                       this.device!.deviceId,
                       service.uuid,
@@ -174,8 +190,9 @@ export class AddDevicePage implements OnInit, OnDestroy {
                       (value) => {
                         // 2. This callback runs every time the device sends data
                         const decodedData = dataViewToText(value);
-                        alert(decodedData);
                         if (decodedData.startsWith('WIFI_CONNECTED')) {
+                          this.statusLabel = 'Data transmitted';
+                          this._ref.detectChanges();
                           this._registerDevice({
                             id: decodedData.replace('WIFI_CONNECTED', ''),
                             name: `Device-${
@@ -183,9 +200,11 @@ export class AddDevicePage implements OnInit, OnDestroy {
                             }`,
                             status: false,
                             room: this.roomName,
+                            userEmail: localStorage
+                              .getItem('userID')!
+                              .toLocaleLowerCase(),
                           });
-                          alert('Device added!');
-                          this._router.navigate(['/']);
+                          this._router.navigate(['/'], { replaceUrl: true });
                         }
                       }
                     );
@@ -193,19 +212,37 @@ export class AddDevicePage implements OnInit, OnDestroy {
                 });
               });
             })
-            .catch((err) => alert(`Error services ${err}`));
+            .catch((err) => {
+              alert(`Error services ${err}`);
+              this._restartDeviceScan();
+            });
         })
-        .catch((error) => alert(`Error ${error}`));
+        .catch((error) => {
+          alert(`Error ${error}`);
+          this._restartDeviceScan();
+        });
     }
   }
 
+  private async _restartDeviceScan(): Promise<void> {
+    await BluetoothLe.stopLEScan();
+    this.scanning = false;
+    this.connecting = false;
+    this.startScan();
+    this._ref.detectChanges();
+  }
+
   private _registerDevice(dev: IDevice): void {
-    this._deviceService.addDevice(
-      {
-        id: '',
-        email: localStorage.getItem('userID')!,
-      },
-      dev
-    );
+    this._deviceService
+      .addDevice(dev)
+      .pipe(
+        tap((res) => alert(`Device: ${res.id}`)),
+        catchError((err) => {
+          console.error('Error registration', JSON.stringify(err));
+          alert(err);
+          return of();
+        })
+      )
+      .subscribe();
   }
 }

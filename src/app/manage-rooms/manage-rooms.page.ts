@@ -35,7 +35,7 @@ export class ManageRoomsPage implements OnInit {
   showAddRoomModal = false;
   room$ = this._roomService.getRooms({
     id: '',
-    email: localStorage.getItem('userID')!,
+    email: localStorage.getItem('userID')!.toLocaleLowerCase(),
   });
   constructor(
     private readonly _roomService: RoomService,
