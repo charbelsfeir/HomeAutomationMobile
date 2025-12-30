@@ -11,7 +11,7 @@ export class LoadingPageComponent implements OnInit {
 
   ngOnInit() {
     setTimeout(() => {
-      this._router.navigate(['']);
+      this._router.navigate([''], { replaceUrl: true });
     }, 2500);
   }
 }

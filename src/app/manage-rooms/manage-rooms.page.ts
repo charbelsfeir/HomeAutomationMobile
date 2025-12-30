@@ -8,10 +8,11 @@ import {
   IonToolbar,
 } from '@ionic/angular/standalone';
 import { TabComponent } from '../tab/tab.component';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { RoomService } from '../services/room.service';
 import { AddRoomComponent } from './add-room/add-room.component';
 import { ModalController, IonicModule } from '@ionic/angular';
+import { ManageRoomsRoomComponent } from './manage-rooms-room/manage-rooms-room.component';
 
 @Component({
   selector: 'app-manage-rooms',
@@ -29,6 +30,7 @@ import { ModalController, IonicModule } from '@ionic/angular';
     RouterModule,
     AddRoomComponent,
     IonicModule,
+    ManageRoomsRoomComponent,
   ],
 })
 export class ManageRoomsPage implements OnInit {
@@ -39,7 +41,8 @@ export class ManageRoomsPage implements OnInit {
   });
   constructor(
     private readonly _roomService: RoomService,
-    private readonly modalCtrl: ModalController
+    private readonly modalCtrl: ModalController,
+    private readonly _router: Router
   ) {}
 
   ngOnInit() {}
@@ -53,5 +56,9 @@ export class ManageRoomsPage implements OnInit {
     });
 
     await modal.present();
+  }
+
+  goHome(): void {
+    this._router.navigate(['/'], { replaceUrl: true });
   }
 }

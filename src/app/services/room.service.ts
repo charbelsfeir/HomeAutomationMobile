@@ -32,14 +32,20 @@ import {
 import { Devices, IDevice } from '../models/device';
 import { User } from '../models/user';
 import { IRoom, Rooms } from '../models/room';
+import { environment } from 'src/environments/environment.prod';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class RoomService {
   $devices = new BehaviorSubject<Devices>([]);
+  private readonly _url = environment.backenUrl + '/room';
 
-  constructor(private readonly _firestore: Firestore) {}
+  constructor(
+    private readonly _firestore: Firestore,
+    private readonly _http: HttpClient
+  ) {}
 
   getRooms(user: User): Observable<Rooms> {
     const roomsRef = collection(this._firestore, `users/${user.email}/rooms`);
@@ -104,12 +110,13 @@ export class RoomService {
   //   // );
   // }
 
-  update(user: User, room: IRoom): void {
-    const userRef = doc(
-      this._firestore,
-      `users/${user.email}/rooms/${room.id}`
-    );
+  update(room: IRoom): Observable<IRoom> {
+    return this._http.put<IRoom>(`${this._url}/update`, room);
+  }
 
-    updateDoc(userRef, { ...room });
+  delete(room: IRoom): Observable<IRoom> {
+    return this._http.delete<IRoom>(`${this._url}/delete`, {
+      body: room,
+    });
   }
 }

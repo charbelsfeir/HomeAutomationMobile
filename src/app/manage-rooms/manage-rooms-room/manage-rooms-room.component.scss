@@ -1,0 +1,22 @@
+:host {
+  .room {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgb(252, 247, 240) !important;
+    padding: 2px 10px 2px 10px;
+    border-radius: 10px;
+
+    > .actions {
+      display: flex;
+      align-items: center;
+      column-gap: 10px;
+    }
+  }
+
+  .input-room {
+    background-color: transparent;
+    border: 0;
+    margin: 16px 0;
+  }
+}

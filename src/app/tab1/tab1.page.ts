@@ -47,12 +47,14 @@ export class Tab1Page implements OnInit {
     label: string;
     active: boolean;
     name: string;
+    roomId: string;
   }[] = [
     {
       id: 0,
       label: 'All',
       active: true,
       name: 'All',
+      roomId: 'All',
     },
   ];
 
@@ -64,6 +66,7 @@ export class Tab1Page implements OnInit {
     label: string;
     active: boolean;
     name: string;
+    roomId: string;
   } {
     return this.tabs.find((tab) => tab.active) ?? this.tabs[0];
   }
@@ -88,11 +91,13 @@ export class Tab1Page implements OnInit {
               this.tabs.push({
                 active: false,
                 id: this.tabs.length,
-                label: room.id,
-                name: room.id,
+                label: room.name,
+                name: room.name,
+                roomId: room.id,
               });
             });
             this.rooms = rooms;
+            console.log(this.rooms);
           })
         )
         .subscribe();
@@ -108,7 +113,7 @@ export class Tab1Page implements OnInit {
     }
 
     return {
-      id: this.selectedTab.name,
+      id: this.selectedTab.roomId,
       name: this.selectedTab.name,
     };
   }
@@ -118,6 +123,7 @@ export class Tab1Page implements OnInit {
     label: string;
     active: boolean;
     name: string;
+    roomId: string;
   }): void {
     this.tabs = this.tabs.map((tab) => {
       if (tab.id === t.id) {
@@ -136,7 +142,7 @@ export class Tab1Page implements OnInit {
   addDevice(): void {
     this._router.navigate(['/add-device'], {
       queryParams: {
-        room: this.selectedTab.name,
+        room: this.selectedTab.roomId,
       },
     });
   }

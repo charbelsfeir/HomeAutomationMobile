@@ -1,0 +1,26 @@
+<div class="room">
+  @if(!isEditing) {
+  <p>{{ room.name }}</p>
+  } @else {
+  <input
+    #roomInput
+    type="text"
+    [formControl]="roomFormControl"
+    class="input-room"
+  />
+  }
+  <div class="actions">
+    @if (!isEditing) {
+    <div class="edit" (click)="edit()">
+      <img src="assets/edit.svg" alt="" width="15px" height="15px" />
+    </div>
+    } @else {
+    <div class="tick" (click)="save()">
+      <img src="assets/tick.svg" alt="" width="15px" height="15px" />
+    </div>
+    }
+    <div class="delete" (click)="delete()">
+      <img src="assets/delete.svg" alt="" width="15px" height="15px" />
+    </div>
+  </div>
+</div>

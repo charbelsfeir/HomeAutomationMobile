@@ -57,7 +57,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
   devices: BleDevice[] = [];
   scanning = false;
   device?: BleDevice;
-  roomName?: string;
+  roomId?: string;
 
   get connectBtnDisabled(): boolean {
     return this.devices.length !== 1 || !this.formGrp.valid || this.connecting;
@@ -68,11 +68,10 @@ export class AddDevicePage implements OnInit, OnDestroy {
     private readonly _deviceService: DeviceService,
     private readonly _router: Router,
     private readonly _ref: ChangeDetectorRef
-  ) {
-    this.roomName = this._route.snapshot.queryParams['room'];
-  }
+  ) {}
 
   async ngOnInit() {
+    this.roomId = this._route.snapshot.queryParams['room'];
     if (Capacitor.getPlatform() === 'web') return;
 
     this.getWifiSSID().then((ssid: string | null) => {
@@ -199,7 +198,7 @@ export class AddDevicePage implements OnInit, OnDestroy {
                               (Math.random() * 10000).toString().split('.')[0]
                             }`,
                             status: false,
-                            room: this.roomName,
+                            room: this.roomId,
                             userEmail: localStorage
                               .getItem('userID')!
                               .toLocaleLowerCase(),

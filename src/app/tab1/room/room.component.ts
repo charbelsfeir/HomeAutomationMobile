@@ -27,6 +27,7 @@ export class RoomComponent implements OnInit, OnChanges {
     label: string;
     active: boolean;
     name: string;
+    roomId: string;
   };
 
   @Input() room?: IRoom;
@@ -48,7 +49,7 @@ export class RoomComponent implements OnInit, OnChanges {
             id: '',
             email: localStorage.getItem('userID')!.toLocaleLowerCase(),
           },
-          this.tab?.name === 'All' ? undefined : this.tab?.name
+          this.tab?.name === 'All' ? undefined : this.tab?.roomId
         );
         // this.room$ = this._roomService.getRoom(
         //   {

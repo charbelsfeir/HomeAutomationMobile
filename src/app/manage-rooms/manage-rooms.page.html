@@ -1,7 +1,7 @@
 <app-tab>
   <ng-container header
     ><div class="header">
-      <div class="back-btn" [routerLink]="['/']">
+      <div class="back-btn" (click)="goHome()">
         <img src="assets/back.svg" alt="" width="30px" height="20px" />
       </div>
       <div class="title">
@@ -12,9 +12,7 @@
   <ng-container content>
     <div class="rooms">
       @for(room of room$ | async; track room.id) {
-      <div class="room">
-        <p>{{room.id}}</p>
-      </div>
+      <app-manage-rooms-room [room]="room"></app-manage-rooms-room>
       }
     </div>
   </ng-container>
@@ -28,7 +26,7 @@
       </button>
     </div>
   </ng-container>
-  @if(showAddRoomModal) {
+  <!-- @if(showAddRoomModal) {
   <app-add-room></app-add-room>
-  }
+  } -->
 </app-tab>
